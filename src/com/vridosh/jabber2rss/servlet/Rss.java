@@ -1,6 +1,7 @@
 package com.vridosh.jabber2rss.servlet;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,14 +23,18 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
 import com.vridosh.jabber2rss.data.Post;
 import com.vridosh.jabber2rss.data.User;
+import com.vridosh.jabber2rss.util.JabberUtil;
 
 public class Rss extends HttpServlet {
+	private final Logger log = Logger.getLogger(getClass().getName());
 	private static final long serialVersionUID = 8900487471335267348L;
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
 			IOException {
-		String fromPar = req.getParameter("from");
+		log.severe("RSS request from " + req.getRemoteAddr());
+
+		String fromPar = JabberUtil.normalizeJid(req.getParameter("from"));
 		Objectify ob = ObjectifyService.begin();
 		
 		Key<User> userKey = User.keyFromId(fromPar);
